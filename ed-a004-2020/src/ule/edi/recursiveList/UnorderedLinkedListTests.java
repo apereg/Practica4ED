@@ -73,6 +73,7 @@ public class UnorderedLinkedListTests {
    @Test
 	public void testRemoveDuplicates() throws EmptyCollectionException {
 	    UnorderedLinkedListImpl<String> lista=new UnorderedLinkedListImpl<String>("A", "A", "B", "C", "B", "A", "C"); 
+	    System.out.println(lista.toString());
 		Assert.assertEquals(lista.removeDuplicates(),4); 
 		Assert.assertEquals(lista.toString(), "(A B C )");
 		Assert.assertEquals(lSABC.removeDuplicates(),0); // 0 repetids

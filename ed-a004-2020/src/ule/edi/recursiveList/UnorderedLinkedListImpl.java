@@ -36,7 +36,8 @@ public class UnorderedLinkedListImpl<T> extends AbstractLinkedListImpl<T> implem
 			throw new NullPointerException();
 		if(this.isEmpty())
 			this.addFirst(element);
-		this.addLastRec(this.front, element);	
+		else
+			this.addLastRec(this.front, element);	
 	}	
 
 	
@@ -57,12 +58,11 @@ public class UnorderedLinkedListImpl<T> extends AbstractLinkedListImpl<T> implem
 	}
 
 	private void addBeforeRec(Node<T> node, T element, T target) {
-		if(node.next == null) {
-			if(node.elem.equals(target))
-				this.addFirst(element);
+		if(node.elem.equals(target)) {
+			this.addFirst(element);
 		} else if(node.next.elem.equals(target)) {
 				Node<T> aux = new Node<T>(element);
-				aux.next = node.next.next;
+				aux.next = node.next;
 				node.next = aux;
 		} else {
 			this.addBeforeRec(node.next, element, target);

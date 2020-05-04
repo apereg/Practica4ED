@@ -203,13 +203,17 @@ public class AbstractLinkedListImpl<T> implements ListADT<T> {
 		if(!this.contains(element))
 			throw new NoSuchElementException();
 		/* Llamada al metodo recursivo */
+		System.out.println("Se pide eliminar la ultima " +element.toString());
 		int lastPos = this.findLastRec(this.front, element, 0, 0);
+		System.out.println("Se va a eliminar la de la posicion " +(lastPos+2));
 		return this.removeLastRec(this.front, element, 0, lastPos);
 	}
 
 	private int findLastRec(Node<T> node, T element, int actual, int pos) {
-		if(node.next == null)
+		
+		if(node.next == null) {
 			return pos;
+		}
 		if(node.next.elem.equals(element))
 			pos = actual;
 		
@@ -269,12 +273,12 @@ public class AbstractLinkedListImpl<T> implements ListADT<T> {
 
 	@Override
 	public String toStringReverse() {
-		return "(" + this.toStringReverseRec(this.front);
+		return this.toStringReverseRec(this.front) + ")";
 	}
 
 	private String toStringReverseRec(Node<T> node) {
 		if (node == null)
-			return ")";
+			return "(";
 		
 		return this.toStringReverseRec(node.next) + node.elem.toString() + " ";
 	}
