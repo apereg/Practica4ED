@@ -70,11 +70,10 @@ public class AbstractLinkedListImpl<T> implements ListADT<T> {
 		/* Si ya se acabo se introduce el parentesis */
 		if (node == null)
 			return ")";
-		
 		/*
 		 * Si no se vuelve a llamar avanzando al siguiente insertando el elemento actual
 		 */
-		return node.elem.toString() + this.toStringRec(node.next);
+		return node.elem.toString() + " " + this.toStringRec(node.next);
 	}
 
 	@Override
@@ -94,16 +93,16 @@ public class AbstractLinkedListImpl<T> implements ListADT<T> {
 
 	@Override
 	public int count(T element) {
-		return this.countRec(this.front, element, 0);
+		return this.countRec(this.front, element);
 	}
 
-	private int countRec(Node<T> actualFront, T target, int actual) {
+	private int countRec(Node<T> actualFront, T target) {
 		if (actualFront == null)
-			return actual;
+			return 0;
 		if (actualFront.elem.equals(target))
-			actual++;
+			return 1 + this.countRec(actualFront.next, target);
 
-		return this.countRec(actualFront.next, target, actual);
+		return this.countRec(actualFront.next, target);
 	}
 
 	@Override
@@ -230,7 +229,7 @@ public class AbstractLinkedListImpl<T> implements ListADT<T> {
 
 	@Override
 	public boolean isEmpty() {
-		return this.front != null;
+		return this.front == null;
 	}
 
 	@Override
@@ -289,9 +288,11 @@ public class AbstractLinkedListImpl<T> implements ListADT<T> {
 	}
 
 	private int removeDuplicatesRec(Node<T> node) {
-		if (node.next == null)
+		if (node == null)
 			return 0;
-		if(this.count(node.next.elem) > 1) {
+		System.out.println("Se entra con " +node.elem.toString());
+		if(this.count(node.elem) > 1) {
+			System.out.println("ESTA DUPLICAO");
 			this.removeLast(node.elem);
 			return 1 + this.removeDuplicatesRec(node.next);
 		}

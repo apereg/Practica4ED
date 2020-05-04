@@ -1,6 +1,6 @@
 package ule.edi.recursiveList;
 
-
+import static org.junit.Assert.assertEquals;
 
 import org.junit.*;
 
@@ -84,7 +84,11 @@ public class UnorderedLinkedListTests {
    
 // AÑADIR MAS TESTS para el resto de casos especiales y para el resto de métodos
  // de las clases AbstractLinkedListImpl y UnorderedLinkedListImpl
-	
+   @Test
+   public void testRemoveLast() {
+	   lSABC.removeLast("B");
+	   assertEquals(lSABC.size(), 2);
+   }
  
 
 }
