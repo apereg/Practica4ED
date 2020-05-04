@@ -3,6 +3,7 @@ package ule.edi.recursiveList;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+import ule.edi.exceptions.ClassNotComparableException;
 import ule.edi.exceptions.EmptyCollectionException;
 
 public class AbstractLinkedListImpl<T> implements ListADT<T> {
@@ -61,18 +62,24 @@ public class AbstractLinkedListImpl<T> implements ListADT<T> {
 
 	@Override
 	public String toString() {
-		return "(" + this.toStringRec(this.front, "") + ")";
+		/* Llamada al metodo recursivo */
+		return "(" + this.toStringRec(this.front);
 	}
 
-	private String toStringRec(Node<T> node, String actualString) {
+	private String toStringRec(Node<T> node) {
+		/* Si ya se acabo se introduce el parentesis */
 		if (node == null)
-			return actualString;
-
-		return this.toStringRec(node.next, actualString + node.elem.toString() + " ");
+			return ")";
+		
+		/*
+		 * Si no se vuelve a llamar avanzando al siguiente insertando el elemento actual
+		 */
+		return node.elem.toString() + this.toStringRec(node.next);
 	}
 
 	@Override
 	public boolean contains(T target) {
+		/* Llamada al metodo recursivo */
 		return this.containsRec(this.front, target);
 	}
 
@@ -115,33 +122,110 @@ public class AbstractLinkedListImpl<T> implements ListADT<T> {
 	}
 
 	@Override
-	public boolean isOrdered() {
-		// TODO RECURSIVO
-		return false;
+	public boolean isOrdered() throws ClassNotComparableException {
+		/* Cualquier lista vacia esta ordenada */
+		if (this.isEmpty())
+			return true;
+
+		/* Llamada al metodo recursivo */
+		return this.isOrderedRec(this.front);
+	}
+
+	private boolean isOrderedRec(Node<T> node) throws ClassNotComparableException {
+		/*
+		 * Si el siguiente nodo es nulo y no ha saltado el false antes la lista esta
+		 * ordenada
+		 */
+		if (node.next == null)
+			return true;
+		/*
+		 * Se compara si estan ordenados comtemplando la excepcion de que no sean
+		 * comparables
+		 */
+		try {
+			@SuppressWarnings("unchecked") // Si esta comprobado por el catch pero aun así salta el aviso
+			Comparable<T> nodeC = (Comparable<T>) node.elem;
+			if (nodeC.compareTo(node.next.elem) > 0)
+				return false;
+		} catch (ClassCastException e) {
+			/*
+			 * He creado una nueva excepcion en el paquete en el caso que los objetos no
+			 * sean comparables
+			 */
+			throw new ClassNotComparableException("AbstractLinkedListImpl");
+		}
+		/* Si estan ordenados y aun no es el final se comprueba el siguiente */
+		return this.isOrderedRec(node.next);
 	}
 
 	@Override
 	public T remove(T element) throws EmptyCollectionException {
+		/* Se contemplan los casos para lanzar excepciones de la documentacion */
 		if (this.isEmpty())
 			throw new EmptyCollectionException("AbstractLinkedList");
 		if (element == null)
 			throw new NullPointerException();
-		return this.removeRec(this.front, element);
+		if (!this.contains(element))
+			throw new NoSuchElementException();
 
+		/* Llamada al metodo recursivo */
+		return this.removeRec(this.front, element);
 	}
 
 	private T removeRec(Node<T> node, T element) {
-		if (node.elem.equals(element))
+		/* If solo para el primer elemento */
+		if (node.elem.equals(element)) {
+			if (this.front.next != null)
+				this.front = this.front.next;
+			else
+				this.front = null;
 			return element;
-		else if (node.next == null)
-			throw new NoSuchElementException();
+		}
+		/*
+		 * Este .next es seguro ya que siempre si el actual no es el siguiente va a ser
+		 * porque la lista contiene el elemento
+		 */
+		if (node.next.elem.equals(element)) {
+			/* Si no es el ultimo se linkea al siguiente */
+			if (node.next.next != null)
+				node.next = node.next.next;
+			else
+				node.next = null;
+			return element;
+		}
+		/* Si aun no se encontro ni es el final se avanza al siguiente nodo */
 		return this.removeRec(node.next, element);
 	}
 
 	@Override
-	public T removeLast(T element) throws EmptyCollectionException {
-		// TODO RECURSIVO
-		return null;
+	public T removeLast(T element){
+		if(element == null)
+			throw new NullPointerException();
+		if(!this.contains(element))
+			throw new NoSuchElementException();
+		/* Llamada al metodo recursivo */
+		int lastPos = this.findLastRec(this.front, element, 0, 0);
+		return this.removeLastRec(this.front, element, 0, lastPos);
+	}
+
+	private int findLastRec(Node<T> node, T element, int actual, int pos) {
+		if(node.next == null)
+			return pos;
+		if(node.next.elem.equals(element))
+			pos = actual;
+		
+		return this.findLastRec(node.next, element, ++actual, pos);
+	}
+
+	private T removeLastRec(Node<T> node, T element, int actual, int lastPos) {
+		if(actual < lastPos)
+			return this.removeLastRec(node.next, element, ++actual, lastPos);
+		T elemReturn = node.next.elem;
+		if(node.next.next != null)
+			node.next = node.next.next;
+		else
+			node.next = null;
+		return elemReturn;
 	}
 
 	@Override
@@ -151,13 +235,13 @@ public class AbstractLinkedListImpl<T> implements ListADT<T> {
 
 	@Override
 	public int size() {
-		return this.sizeRec(this.front, 0);
+		return this.sizeRec(this.front);
 	}
 
-	private int sizeRec(Node<T> node, int actualSize) {
+	private int sizeRec(Node<T> node) {
 		if (node == null)
-			return actualSize;
-		return this.sizeRec(node.next, ++actualSize);
+			return 0;
+		return 1 + this.sizeRec(node.next);
 	}
 
 	@Override
@@ -171,26 +255,29 @@ public class AbstractLinkedListImpl<T> implements ListADT<T> {
 	public String toStringFromUntil(int from, int until) {
 		if (from <= 0 || until < from)
 			throw new IllegalArgumentException();
-		return "(" + this.toStringFromUntilRec(this.front, --from, --until, 0, "") + ")";
+		return "(" + this.toStringFromUntilRec(this.front, --from, --until, 0);
 	}
 
-	private String toStringFromUntilRec(Node<T> node, int from, int until, int actual, String actualString) {
-		if (actual == until || node == null)
-			return actualString;
+	private String toStringFromUntilRec(Node<T> node, int from, int until, int actual) {
+		if (actual == until)
+			return ")";
+		if (node == null)
+			return "";
 		if (actual < from)
-			return this.toStringFromUntilRec(node.next, from, until, ++actual, actualString);
-		return this.toStringFromUntilRec(node.next, from, until, ++actual, actualString + node.elem.toString() + " ");
+			return this.toStringFromUntilRec(node.next, from, until, ++actual);
+		return node.elem.toString() + " " + this.toStringFromUntilRec(node.next, from, until, ++actual);
 	}
 
 	@Override
 	public String toStringReverse() {
-		return "(" + this.toStringReverseRec(this.front, "") + ")";
+		return "(" + this.toStringReverseRec(this.front);
 	}
 
-	private String toStringReverseRec(Node<T> node, String actualToString) {
+	private String toStringReverseRec(Node<T> node) {
 		if (node == null)
-			return actualToString;
-		return actualToString + node.elem.toString() + " ";
+			return ")";
+		
+		return this.toStringReverseRec(node.next) + node.elem.toString() + " ";
 	}
 
 	@Override
@@ -198,17 +285,17 @@ public class AbstractLinkedListImpl<T> implements ListADT<T> {
 		if (this.isEmpty())
 			throw new EmptyCollectionException("AbstractLinkedList");
 
-		// TODO RECURSIVE
-		// Implementar teniendo en cuenta que la lista estÃ¡ desordenada
-
-		return this.removeDuplicatesRec(this.front, 0);
+		return this.removeDuplicatesRec(this.front);
 	}
 
-	private int removeDuplicatesRec(Node<T> node, int elementRemoved) {
-		if (node == null)
-			return elementRemoved;
-		// TODO hacer un metodo que busuqe la primera iteraccion ???
-		return 0;
+	private int removeDuplicatesRec(Node<T> node) {
+		if (node.next == null)
+			return 0;
+		if(this.count(node.next.elem) > 1) {
+			this.removeLast(node.elem);
+			return 1 + this.removeDuplicatesRec(node.next);
+		}
+		return this.removeDuplicatesRec(node.next);
 	}
 
 	@Override

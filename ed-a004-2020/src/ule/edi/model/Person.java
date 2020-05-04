@@ -48,8 +48,10 @@ public class Person implements Comparable<Person>{
 	
     @Override
 	public boolean equals(Object obj) {
-		// TODO Auto-generated method stub
-		// Dos personas son iguales si son iguales sus nifs
+		if(obj instanceof Person) {
+			Person person = (Person)obj;
+			return person.getNif().equalsIgnoreCase(this.nif);
+		}
     	return false;
 	}
 
@@ -57,11 +59,7 @@ public class Person implements Comparable<Person>{
 
 	@Override
 	public int compareTo(Person o) {
-		// TODO Auto-generated method stub
-		// Las personas se comparan por la edad.
-		// Este método debe devolver la diferencia de edad entre this y o
-		return 0;
-		
+		return this.age - o.getAge();	
 	}
 	
 }

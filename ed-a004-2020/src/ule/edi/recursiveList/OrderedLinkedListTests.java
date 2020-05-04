@@ -3,6 +3,7 @@ package ule.edi.recursiveList;
 
 import org.junit.*;
 
+import ule.edi.exceptions.ClassNotComparableException;
 import ule.edi.exceptions.EmptyCollectionException;
 import ule.edi.model.Person;
 
@@ -36,7 +37,7 @@ public class OrderedLinkedListTests {
 	// tests isOrdered
 	// todas las listas OrderedLinkedListImpl deben ser ordenadas
 	@Test
-	public void testIsOrdered() {
+	public void testIsOrdered() throws ClassNotComparableException {
 		// todas las orderedLists deben estar ordenadas
 		Assert.assertEquals(lA4B2.toString(),"(A A A A B B )");
 		Assert.assertTrue(lA4B2.isOrdered());
@@ -54,7 +55,7 @@ public class OrderedLinkedListTests {
 
 	// Tests con personas
 	@Test
-	public void testInsertPersons() {
+	public void testInsertPersons() throws ClassNotComparableException {
 		OrderedLinkedListImpl<Person> lista=new OrderedLinkedListImpl<Person>(person1, person2, person3, person4);
 		Assert.assertEquals(lista.toString(),"({01020304A, Sara, 16} {20304050A, Pedro, 18} {10203040A, Ana, 20} {30405060A, Pablo, 30} )");
 		Assert.assertTrue(lista.isOrdered());

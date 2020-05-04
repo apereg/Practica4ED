@@ -1,5 +1,6 @@
 package ule.edi.recursiveList;
 
+import ule.edi.exceptions.ClassNotComparableException;
 import ule.edi.exceptions.EmptyCollectionException;
 
 public interface ListADT<T> extends Iterable<T>{
@@ -119,7 +120,7 @@ public interface ListADT<T> extends Iterable<T>{
      * @throws EmptyCollectionException  si la lista está vacía.
 	 * 
 	 */
-	public T removeLast(T element) throws EmptyCollectionException;
+	public T removeLast(T element);
 	
 	/**
 	 * RECURSIVO
@@ -166,8 +167,10 @@ public interface ListADT<T> extends Iterable<T>{
 	 * La lista vacía está ordenada.
 	 * 
 	 * @return <tt>true</tt> si los elementos están ordenados de menor a mayor; false en caso contrario.
+	 * 
+	 * @throws ClassNotComparableException 
 	 */
-	public boolean isOrdered();
+	public boolean isOrdered() throws ClassNotComparableException;
 	
 	/**
 	 * RECURSIVO 
