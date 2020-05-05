@@ -120,7 +120,7 @@ public interface ListADT<T> extends Iterable<T>{
      * @throws EmptyCollectionException  si la lista está vacía.
 	 * 
 	 */
-	public T removeLast(T element);
+	public T removeLast(T element) throws EmptyCollectionException;
 	
 	/**
 	 * RECURSIVO

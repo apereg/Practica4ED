@@ -78,6 +78,8 @@ public class AbstractLinkedListImpl<T> implements ListADT<T> {
 
 	@Override
 	public boolean contains(T target) {
+		if(target == null)
+			throw new NullPointerException();
 		/* Llamada al metodo recursivo */
 		return this.containsRec(this.front, target);
 	}
@@ -197,9 +199,11 @@ public class AbstractLinkedListImpl<T> implements ListADT<T> {
 	}
 
 	@Override
-	public T removeLast(T element){
+	public T removeLast(T element) throws EmptyCollectionException{
 		if(element == null)
 			throw new NullPointerException();
+		if(this.isEmpty())
+			throw new EmptyCollectionException("AbstractLinkedList");
 		if(!this.contains(element))
 			throw new NoSuchElementException();
 		/* Llamada al metodo recursivo */
@@ -262,7 +266,7 @@ public class AbstractLinkedListImpl<T> implements ListADT<T> {
 	}
 
 	private String toStringFromUntilRec(Node<T> node, int from, int until, int actual) {
-		if (actual == until)
+		if (actual == until+1)
 			return ")";
 		if (node == null)
 			return "";
@@ -291,7 +295,7 @@ public class AbstractLinkedListImpl<T> implements ListADT<T> {
 		return this.removeDuplicatesRec(this.front);
 	}
 
-	private int removeDuplicatesRec(Node<T> node) {
+	private int removeDuplicatesRec(Node<T> node) throws EmptyCollectionException {
 		if (node == null)
 			return 0;
 		System.out.println("Se entra con " +node.elem.toString());
