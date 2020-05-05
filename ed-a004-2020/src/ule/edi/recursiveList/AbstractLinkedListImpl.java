@@ -24,11 +24,12 @@ public class AbstractLinkedListImpl<T> implements ListADT<T> {
 			this.elem = element;
 			this.next = null;
 		}
-
+		
+		/* No necesario e intesteable
 		@Override
 		public String toString() {
 			return "(" + elem + ")";
-		}
+		} */
 
 	}
 
@@ -46,7 +47,7 @@ public class AbstractLinkedListImpl<T> implements ListADT<T> {
 
 		@Override
 		public T next() {
-			if (this.node == null)
+			if (!hasNext())
 				throw new NoSuchElementException();
 
 			T elemReturn = this.node.elem;
@@ -207,9 +208,7 @@ public class AbstractLinkedListImpl<T> implements ListADT<T> {
 		if(!this.contains(element))
 			throw new NoSuchElementException();
 		/* Llamada al metodo recursivo */
-		System.out.println("Se pide eliminar la ultima " +element.toString());
 		int lastPos = this.findLastRec(this.front, element, 0, 0);
-		System.out.println("Se va a eliminar la de la posicion " +(lastPos+2));
 		return this.removeLastRec(this.front, element, 0, lastPos);
 	}
 
@@ -266,10 +265,8 @@ public class AbstractLinkedListImpl<T> implements ListADT<T> {
 	}
 
 	private String toStringFromUntilRec(Node<T> node, int from, int until, int actual) {
-		if (actual == until+1)
+		if (actual == until+1 || node == null)
 			return ")";
-		if (node == null)
-			return "";
 		if (actual < from)
 			return this.toStringFromUntilRec(node.next, from, until, ++actual);
 		return node.elem.toString() + " " + this.toStringFromUntilRec(node.next, from, until, ++actual);
@@ -298,9 +295,7 @@ public class AbstractLinkedListImpl<T> implements ListADT<T> {
 	private int removeDuplicatesRec(Node<T> node) throws EmptyCollectionException {
 		if (node == null)
 			return 0;
-		System.out.println("Se entra con " +node.elem.toString());
 		if(this.count(node.elem) > 1) {
-			System.out.println("ESTA DUPLICAO");
 			this.removeLast(node.elem);
 			return 1 + this.removeDuplicatesRec(node.next);
 		}

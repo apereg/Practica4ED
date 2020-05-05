@@ -4,12 +4,15 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 import org.junit.*;
 
 import ule.edi.exceptions.ClassNotComparableException;
 import ule.edi.exceptions.EmptyCollectionException;
+import ule.edi.model.Person;
+import ule.edi.recursiveList.AbstractLinkedListImpl.Node;
 
 public class UnorderedLinkedListTests {
 
@@ -175,7 +178,10 @@ public class UnorderedLinkedListTests {
 
 	@Test(expected = ClassNotComparableException.class)
 	public void testIsOrderedNonComparable() throws ClassNotComparableException {
-		UnorderedLinkedListImpl<Boolean> lista = new UnorderedLinkedListImpl<>(true, false, true);
+		int aux1[][] = { {1,2,3,4}, {5,6,7,8}};
+		int aux2[][] = { {1,2,3,6}, {5,6,7,8}};
+		int aux3[][] = { {1,2,3,400}, {5,6,7,8}};
+		UnorderedLinkedListImpl<int[][]> lista = new UnorderedLinkedListImpl<>(aux1, aux2, aux3);
 		lista.isOrdered();
 	}
 
@@ -301,6 +307,39 @@ public class UnorderedLinkedListTests {
 	@Test (expected = EmptyCollectionException.class)
 	public void testRemoveDuplicatesEmptyCollection() throws EmptyCollectionException {
 		lS.removeDuplicates();
+	}
+
+	@Test (expected = NoSuchElementException.class)
+	public void testIterator() {
+		Iterator<String> itr = lSABC.iterator();
+		assertTrue(itr.hasNext());
+		assertEquals(itr.next(), "A");
+		assertTrue(itr.hasNext());
+		assertEquals(itr.next(), "B");
+		assertTrue(itr.hasNext());
+		assertEquals(itr.next(), "C");
+		assertFalse(itr.hasNext());
+		itr.next();
+	}
+	
+	@Test (expected = UnsupportedOperationException.class)
+	public void testIteratorRemove() {
+		Iterator<String> itr = lSABC.iterator();
+		assertTrue(itr.hasNext());
+		assertEquals(itr.next(), "A");
+		itr.remove();
+	}
+	
+	@Test
+	public void testPerson() {
+		Person person1 = new Person("00", "Juan", 48);
+		Person person2 = new Person("05", "Adri", 48);
+		Person person3 = new Person("00", "Pedro", 15);
+		assertEquals(person1.compareTo(person2), 0);
+		assertEquals(person1.compareTo(person3), 33);
+		assertTrue(person1.equals(person3));
+		assertFalse(person1.equals(person2));
+		assertFalse(person1.equals("objeto cualquiera"));
 	}
 
 }
