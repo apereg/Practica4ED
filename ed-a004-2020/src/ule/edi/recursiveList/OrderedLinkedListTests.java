@@ -35,20 +35,14 @@ public class OrderedLinkedListTests {
 		Assert.assertTrue(new OrderedLinkedListImpl<>().isEmpty());
 	}
 	
-	
-
-	// tests isOrdered
-	// todas las listas OrderedLinkedListImpl deben ser ordenadas
 	@Test
 	public void testIsOrdered() throws ClassNotComparableException {
-		// todas las orderedLists deben estar ordenadas
 		Assert.assertEquals(lA4B2.toString(),"(A A A A B B )");
 		Assert.assertTrue(lA4B2.isOrdered());
 		Assert.assertTrue((new OrderedLinkedListImpl<String>("A","B")).isOrdered());
 		Assert.assertTrue((new OrderedLinkedListImpl<String>()).isOrdered());		
 	}
 
-	// Tests removeDuplicates en ordenada
 	@Test
 	public void testRemoveDuplicates() throws EmptyCollectionException {
 		Assert.assertEquals(lA4B2.removeDuplicates(),4); // 3 A + 1B repetidas
@@ -56,7 +50,6 @@ public class OrderedLinkedListTests {
 		Assert.assertEquals(lA4B2.toString(), "(A B )");	
 	}
 
-	// Tests con personas
 	@Test
 	public void testInsertPersons() throws ClassNotComparableException {
 		OrderedLinkedListImpl<Person> lista=new OrderedLinkedListImpl<>(person1, person2, person3, person4);
@@ -65,8 +58,7 @@ public class OrderedLinkedListTests {
 	}
 	
 	
-	// AÑADIR MAS TESTS para el resto de casos especiales 
-	
+	/* TESTS DEL ALUMNO */
 	@Test
 	public void testAddPenultimate() throws ClassNotComparableException, EmptyCollectionException {
 		OrderedLinkedListImpl<Person> lista=new OrderedLinkedListImpl<>(person3, person2, person4, person1);

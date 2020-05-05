@@ -12,7 +12,6 @@ import org.junit.*;
 import ule.edi.exceptions.ClassNotComparableException;
 import ule.edi.exceptions.EmptyCollectionException;
 import ule.edi.model.Person;
-import ule.edi.recursiveList.AbstractLinkedListImpl.Node;
 
 public class UnorderedLinkedListTests {
 
@@ -32,7 +31,6 @@ public class UnorderedLinkedListTests {
 		Assert.assertEquals("(A B C D )", lS.toString());
 	}
 
-// TESTS DE addFirst
 	@Test
 	public void addFirstTest() {
 
@@ -45,8 +43,6 @@ public class UnorderedLinkedListTests {
 		lS.addFirst("A");
 		Assert.assertEquals("(A B C D )", lS.toString());
 	}
-
-	// TESTS DE addBefore
 
 	@Test
 	public void addBeforeTest() {
@@ -61,8 +57,6 @@ public class UnorderedLinkedListTests {
 		Assert.assertEquals("(A B C D )", lS.toString());
 	}
 
-	// Tests toStringReverse
-
 	@Test
 	public void toStringReverse() {
 		lS = new UnorderedLinkedListImpl<String>("A", "B", "C", "D");
@@ -70,7 +64,6 @@ public class UnorderedLinkedListTests {
 		Assert.assertEquals("(D C B A )", lS.toStringReverse());
 
 	}
-// Tests eliminar duplicados
 
 	@Test
 	public void testRemoveDuplicates() throws EmptyCollectionException {
@@ -82,8 +75,7 @@ public class UnorderedLinkedListTests {
 
 	}
 
-// AÑADIR MAS TESTS para el resto de casos especiales y para el resto de métodos
-	// de las clases AbstractLinkedListImpl y UnorderedLinkedListImpl
+	/* TESTS DEL ALUMNO */
 	@Test
 	public void testAddBeforeRec() {
 		lSABC.addLast("W");
@@ -330,6 +322,7 @@ public class UnorderedLinkedListTests {
 		itr.remove();
 	}
 	
+	/* TEST DE PERSON */
 	@Test
 	public void testPerson() {
 		Person person1 = new Person("00", "Juan", 48);
